@@ -66,19 +66,18 @@ from django.db import models
 #                   [email])
 
 
-class Author:
-    pass
-
-
-class Like:
-    pass
-
-
-class Comment:
-    pass
-
-
-class Tag:
-    pass
-
+# class Author:
+#     pass
+#
+#
+# class Like:
+#     pass
+#
+#
+# class Comment:
+#     pass
+#
+#
+# class Tag:
+#     pass
 

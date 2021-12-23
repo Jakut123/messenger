@@ -1,4 +1,6 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+# from rest_framework.authtoken.admin import User
 
 # Create your models here.
 
@@ -32,6 +34,7 @@ class Post(models.Model):
                             on_delete=models.CASCADE,
                             related_name='tag'
                             )
+
     # comment = models.ForeignKey(Comment,
     #                             on_delete=models.CASCADE,
     #                             related_name='comment'
@@ -45,5 +48,18 @@ class Post(models.Model):
         verbose_name_plural = 'посты'
 
 
-
-
+class Comment(models.Model):
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE,
+                             related_name='comments')
+    # author = models.ForeignKey(User,
+    #                            on_delete=models.CASCADE,
+    #                            related_name='comments')
+    text = models.TextField()
+    rating = models.SmallIntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)

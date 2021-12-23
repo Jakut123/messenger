@@ -3,6 +3,17 @@ from django.db import models
 # Create your models here.
 
 
+# class Comment(models.Model):
+#     name = models.TextField(max_length=10000, null=False, verbose_name='коментарий')
+#
+#     def __str__(self):
+#         return f'{self.name}'
+#
+#     class Meta:
+#         verbose_name = 'коментарий'
+#         verbose_name_plural = 'коментарии'
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=50, verbose_name='название')
 
@@ -21,6 +32,10 @@ class Post(models.Model):
                             on_delete=models.CASCADE,
                             related_name='tag'
                             )
+    # comment = models.ForeignKey(Comment,
+    #                             on_delete=models.CASCADE,
+    #                             related_name='comment'
+    #                             )
 
     def __str__(self):
         return f'{self.name}'
@@ -28,6 +43,7 @@ class Post(models.Model):
     class Meta:
         verbose_name = 'пост'
         verbose_name_plural = 'посты'
+
 
 
 

@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model, authenticate
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
+from requests import Response
 from rest_framework import serializers
-
+from rest_framework.views import APIView
 
 User = get_user_model()
 

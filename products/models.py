@@ -76,14 +76,24 @@ class Like(models.Model):
     )
 
 
-# class Korzina(models.Model):
-#     author = models.ForeignKey(User,
-#                                on_delete=models.CASCADE,
-#                                related_name='korzina')
-#     product = models.ForeignKey(Product,
-#                                 on_delete=models.CASCADE,
-#                                 related_name='korzina')
-#     korzina = models.CharField(max_length=19, null=True, blank=True)
+class Favorite(models.Model):
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE,
+                                related_name='favorites')
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name='favorites')
+
+    # favorites = models.CharField(max_length=20)
+
+
+class Basket(models.Model):
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name='basket')
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE,
+                                related_name='basket')
 
 
 # class OrderItem(models.Model):

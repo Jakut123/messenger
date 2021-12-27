@@ -8,8 +8,9 @@ from rest_framework.permissions import IsAuthenticated, BasePermission, SAFE_MET
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from products.models import Comment, Product, Category, Like
-from products.serializers import CommentSerializer, ProductSerializer, CategorySerializer, LikeSerializer
+from products.models import Comment, Product, Category, Like, Favorite, Basket
+from products.serializers import CommentSerializer, ProductSerializer, CategorySerializer, LikeSerializer, \
+    FavoriteSerializer, BasketSerializer
 
 
 class IsAdmin(BasePermission):
@@ -78,6 +79,17 @@ class LikeViewSet(ModelViewSet):
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticated]
 
+
+class FavoriteViewSet(ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class BasketViewSet(ModelViewSet):
+    queryset = Basket.objects.all()
+    serializer_class = BasketSerializer
+    permission_classes = [IsAuthenticated]
 
 # class OrderViewSet(ModelViewSet):
 #     queryset = Order.objects.all()

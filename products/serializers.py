@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from products.models import Product, Comment, Category, Like
+from products.models import Product, Comment, Category, Like, Favorite, Basket
 
 
 class ProductsListSerializer(serializers.ModelSerializer):
@@ -30,6 +30,18 @@ class LikeSerializer(serializers.ModelSerializer):
         if rating not in range(-1, 2):
             raise serializers.ValidationError('Только лайк или дизлайк! НЕ РЕЙТИНГ!')
         return rating
+
+
+class FavoriteSerializer(serializers.Serializer):
+    class Meta:
+        model = Favorite
+        fields = '__all__'
+
+
+class BasketSerializer(serializers.Serializer):
+    class Meta:
+        model = Basket
+        fields = '__all__'
 
 
 class CommentSerializer(serializers.ModelSerializer):

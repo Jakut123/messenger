@@ -60,5 +60,5 @@ class User(AbstractBaseUser):
         message = f'Ваш код активации: {code}'
         send_mail('Активация аккаунта',
                   message,
-                  'test@gmail.com',
+                  'jakut040702@gmail.com',
                   [email])

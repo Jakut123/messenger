@@ -4,10 +4,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin
-from rest_framework.permissions import IsAuthenticated, BasePermission, SAFE_METHODS
+from rest_framework.permissions import IsAuthenticated, BasePermission, SAFE_METHODS, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
+from products.filters import ProductFilter
 from products.models import Comment, Product, Category, Like, Favorite, Basket
 from products.serializers import CommentSerializer, ProductSerializer, CategorySerializer, LikeSerializer, \
     FavoriteSerializer, BasketSerializer
@@ -29,26 +30,24 @@ class IsAdmin(BasePermission):
                request.user.is_staff
 
 
-class IsAuthor:
-    class IsAuthor(BasePermission):
-        def has_object_permission(self, request, view, obj):
-            return request.user.is_authenticated and \
-                   (request.user == obj.author or request.user.is_staff)
+class IsAuthor(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_authenticated and request.user == obj.author
 
 
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdmin]
+    permission_classes = [AllowAny]
 
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAdmin]
+    permission_classes = [AllowAny]
     # pagination_class = rest_framework.pagination.PageNumberPagination
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    # filterset_class = ProductFilter
+    filter_class = ProductFilter
     search_fields = ['name']
     ordering_fields = ['name', 'price']
 
@@ -67,29 +66,60 @@ class CommentViewSet(CreateModelMixin,
                      GenericViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    # permission_classes = [IsAuthenticated]
+
+    # def get_permissions(self):
+    #     if self.action == 'create':
+    #         return [IsAuthenticated()]
+    #     return [IsAuthor()]
 
     def get_permissions(self):
         if self.action == 'create':
             return [IsAuthenticated()]
-        return [IsAuthor()]
+        if self.action == 'retrieve':
+            return [AllowAny()]
+        else:
+            return [IsAuthor()]
 
 
 class LikeViewSet(ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [IsAuthenticated()]
+        if self.action == 'retrieve':
+            return [AllowAny()]
+        else:
+            return [IsAuthor()]
 
 
 class FavoriteViewSet(ModelViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [IsAuthenticated()]
+        if self.action == 'retrieve':
+            return [AllowAny()]
+        else:
+            return [IsAuthor()]
 
 
 class BasketViewSet(ModelViewSet):
     queryset = Basket.objects.all()
     serializer_class = BasketSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [IsAuthenticated()]
+        if self.action == 'retrieve':
+            return [AllowAny()]
+        else:
+            return [IsAuthor()]
 
 # class OrderViewSet(ModelViewSet):
 #     queryset = Order.objects.all()

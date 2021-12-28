@@ -24,24 +24,40 @@ class CategorySerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
-        fields = '__all__'
+        # fields = ['product', 'like']
+        fields = ['product', 'like']
 
     def validate_rating(self, rating):
         if rating not in range(-1, 2):
             raise serializers.ValidationError('Только лайк или дизлайк! НЕ РЕЙТИНГ!')
         return rating
 
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['author'] = user
+        return super().create(validated_data)
 
-class FavoriteSerializer(serializers.Serializer):
+
+class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
-        fields = '__all__'
+        fields = ['product']
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['author'] = user
+        return super().create(validated_data)
 
 
-class BasketSerializer(serializers.Serializer):
+class BasketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Basket
-        fields = '__all__'
+        fields = ['product']
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['author'] = user
+        return super().create(validated_data)
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -58,6 +74,11 @@ class CommentSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         validated_data['author'] = user
         return super().create(validated_data)
+
+    # def create(self, validated_data):
+    #     user = self.context['request'].user
+    #     validated_data['author'] = user
+    #     return super().create(validated_data)
 
 #
 # class OrderItemSerializer(serializers.ModelSerializer):
